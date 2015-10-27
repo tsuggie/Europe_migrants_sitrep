@@ -2,7 +2,7 @@ var lg =  {
 
 	mapRegister:'',
 	_gridRegister:'',
-	//_colors:['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'],  //greens
+    //_colors:['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'],  //greens
 	//_colors:['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177'],	//purples
 	//_colors:['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043'],    //pinks
 	_colors: ['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026'],
@@ -111,14 +111,31 @@ var lg =  {
         	var _parent = this;
 
         	data.sort(function(a, b) {
+
+                if(a.value==null || isNaN(a.value) || a.value===''){
+                    return -1;
+                }
+                if(b.value==null || isNaN(b.value) || b.value===''){
+                    return 1;
+                }                    
     			return parseFloat(a.value) - parseFloat(b.value);
 			});
 
+
         	data.forEach(function(d,i){
-        		var c = Math.floor(i/data.length*5);
-        		d3.selectAll('.dashgeom'+d.key).attr('fill',lg._colors[c]).attr('fill-opacity',0.8);
+                if(d.value==null||isNaN(d.value)||d.value===''){
+                    d3.selectAll('.dashgeom'+d.key).attr('fill','#cccccc').attr('fill-opacity',0.8);
+                } else {                        
+            		var c = Math.floor(i/data.length*5);
+            		d3.selectAll('.dashgeom'+d.key).attr('fill',lg._colors[c]).attr('fill-opacity',0.8);
+                }
         	});
         }
+    },
+
+    column: function(dataName){
+        this.dataName = dataName;
+        this.labelName = dataName;
     },
 
     grid: function(id){
@@ -129,7 +146,7 @@ var lg =  {
     	this._data = [];
     	this._nameAttr = '';
     	this._joinAttr = '';
-    	this._valuesList = [];
+    	this._columns = [];
     	this._properties = {};
     	this._vWhiteSpace = 1;
     	this._hWhiteSpace = 1;
@@ -190,14 +207,14 @@ var lg =  {
             }        
         };
 
-		this.valuesList = function(val){
+		this.columns = function(val){
             if(typeof val === 'undefined'){
-                return this._valuesList;
+                return this._columns;
             } else {
-                this._valuesList=val;
+                this._columns=val;
                 return this;
             }        
-        };
+        };      
 
         this.vWhiteSpace = function(val){
             if(typeof val === 'undefined'){
@@ -222,14 +239,13 @@ var lg =  {
         }
 
         this.render = function(){
-        	this._render(this._id,this._data,this._nameAttr,this._joinAttr,this._valuesList,this._width,this._height);
+        	this._render(this._id,this._data,this._nameAttr,this._joinAttr,this._columns,this._width,this._height);
         }
 
         this._render = function(id,data,nameAttr,joinAttr,valuesList,width,height){
 
         	var _parent = this;
 
-			//this._properties.margin = {top: 120, right: 50, bottom: 20, left: 120};
             this._properties.width = this._width - this._properties.margin.left - this._properties.margin.right;
             this._properties.height = this._height - this._properties.margin.top - this._properties.margin.bottom;
 
@@ -248,13 +264,26 @@ var lg =  {
                 .append("g")
                 .attr("transform", "translate(" + this._properties.margin.left + "," + this._properties.margin.top + ")");
 
-            var tip = d3.tip().attr('class', 'd3-tip').html(function(d,i) {return d3.format('0,000')(d.value); });
+            var tip = d3.tip().attr('class', 'd3-tip').html(function(d,i) {
+                if(isNaN(d.value) || d.value==null || d.value===''){
+                    return d.value;
+                } else {                    
+                    return d3.format('0,000')(d.value);
+                }
+            });
+
             var tipsort = d3.tip().attr('class', 'd3-tip').html(function(d,i) {return "Click to sort"});     
 
             valuesList.forEach(function(v,i){
             	var g = _grid.append("g").attr('class','bars');
             		
             	data.sort(function(a, b) {
+                    if(a[v]==null || isNaN(a[v]) || a[v]===''){
+                        return -1;
+                    }
+                    if(b[v]==null || isNaN(b[v]) || b[v]===''){
+                        return 1;
+                    }                    
     				return parseFloat(a[v]) - parseFloat(b[v]);
 				});
 
@@ -284,10 +313,16 @@ var lg =  {
 	                .attr("x", function(d,i2){return _parent._properties.boxWidth*i+i*_parent._hWhiteSpace})
 	                .attr("y", function(d,i2){return _parent._properties.boxHeight*i2+i2*_parent._vWhiteSpace})
 	                .attr("width", function(d){
+                        if(d.value==null||isNaN(d.value) || d.value===''){
+                            return _parent._properties.boxWidth;
+                        }
 	                    return _parent._properties.x[i](d.value);
 	                })
 	                .attr("height", _parent._properties.boxHeight)
 	                .attr("fill",function(d,i2){
+                        if(d.value==null||isNaN(d.value) || d.value===''){
+                            return '#cccccc';
+                        }                        
 	                	var c = Math.floor(d.pos/data.length*5);
 	                	return lg._colors[c];
 	                });	                
@@ -457,10 +492,15 @@ var lg =  {
         this._update = function(data,valuesList,sortBy,nameAttr){
 
         	var _parent = this;
-
         	data.sort(function(a, b) {
-    			return parseFloat(b[sortBy]) - parseFloat(a[sortBy]);
-			});
+                    if(a[sortBy]==null || isNaN(a[sortBy]) || a[sortBy]===''){
+                        return 1;
+                    }
+                    if(b[sortBy]==null || isNaN(b[sortBy]) || b[sortBy]===''){
+                        return -1;
+                    }                    
+                    return parseFloat(b[sortBy])-parseFloat(a[sortBy]);
+                });
 
 	        data.forEach(function(d,i){
 	          	d.pos = i;
