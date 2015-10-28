@@ -1,5 +1,19 @@
+//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
+lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
+//lg.colors(['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043']);  //purple-red multi-hue
+//lg.colors(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);  //yellow-orange-red multi-hue
+	
+var aStaff = new lg.column("Active Staff").domain([0,1500]);	//example of setting domains - might want to change this
+var wCBene = new lg.column("Women and Children Benificiaries").label("Women & Children Beneficiaries");
+var wBDist = new lg.column("Water Bottle Dist").label("Water Bottle Distribution");
+var fPDist = new lg.column("Food Parcel Dist").label("Food Parcel Distribution");
+var hKDist = new lg.column("Hygiene Kit Dist").label("Hygiene Kit Distribution");
+var hCSupp = new lg.column("Host communities supported").label("Host Communities Supported");
+ 
 function generateDashboard(data,geom){
+	var colors = new lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);
     var map = new lg.map('#map').geojson(geom).joinAttr('Iso_Code').zoom(3).center([53.5,20]);
+		//lg.map.mapColor(data)?
     var grid = new lg.grid('#grid')
         .data(data)
         .width($('#grid').width())
@@ -8,13 +22,14 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
-        .columns(['Total Migrants','Active Staff','Active Volunteers','Bilateral Volunteers','Surge Volunteers','Active Locations','Beneficiaries This Week','Total Beneficiary Contacts','Women and Children Benificiaries','Water Bottle Dist','Food Parcel Dist','Hygiene Kit Dist','Medical Interventions','RFL Initatiated 2015','RFL Completed 2015','Long-Term Shelter Support','Host communities supported'])
-        .margins({top: 150, right: 105, bottom: 20, left: 140});
+ 		.columns(['Total Migrants',aStaff,'Active Volunteers','Bilateral Volunteers','Surge Volunteers','Active Locations','Beneficiaries This Week','Total Beneficiary Contacts',wCBene,wBDist,fPDist,hKDist,'Medical Interventions','RFL Initatiated 2015','RFL Completed 2015','Long-Term Shelter Support',hCSupp]) 
+        .margins({top: 150, right: 110, bottom: 20, left: 140});
 
     lg.init();
 
     $("#map").width($("#map").width()); 
 }
+
 
 function hxlProxyToJSON(input,headers){
     var output = [];
@@ -59,8 +74,8 @@ function generateStats(id,data){
 	};
 	
     var html = '';
-    html = html + '<p  class="stat_title">Total Migrants in Europe</p><p class="stat">'+ formatComma(totalMigrants) + '</p>';
-    html = html + '<p class="stat_title">Total Beneficiary Contacts</p><p class="stat">'+ formatComma(totalBeneficiaries) + '</p><p class="sub_stat">   (' + formatPerc(totalBeneficiaries/totalMigrants) + ')';   
+    html = html + '<div class="stat_title">Total Migrants in Europe</div><div class="stat">'+ formatComma(totalMigrants) + '</div>';
+    html = html + '<div class="stat_title">Total Beneficiary Contacts</div><div class="stat">'+ formatComma(totalBeneficiaries) + '</div><div class="sub_stat">' + '&nbsp&nbsp(' + formatPerc(totalBeneficiaries/totalMigrants) + ')';   
     html = html + '</div>';
     $(id).html(html);
 }
