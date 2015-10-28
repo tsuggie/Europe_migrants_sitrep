@@ -2,10 +2,7 @@ var lg =  {
 
 	mapRegister:'',
 	_gridRegister:'',
-    //_colors:['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'],  //greens
-	//_colors:['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177'],	//purples
-	//_colors:['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043'],    //pinks
-	_colors: ['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026'],
+	_colors:['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'],
     _selectedBar:-1,
 
 	init: function(){
@@ -109,9 +106,7 @@ var lg =  {
 
         this.colorMap = function (data){
         	var _parent = this;
-
         	data.sort(function(a, b) {
-
                 if(a.value==null || isNaN(a.value) || a.value===''){
                     return -1;
                 }
@@ -120,8 +115,6 @@ var lg =  {
                 }                    
     			return parseFloat(a.value) - parseFloat(b.value);
 			});
-
-
         	data.forEach(function(d,i){
                 if(d.value==null||isNaN(d.value)||d.value===''){
                     d3.selectAll('.dashgeom'+d.key).attr('fill','#cccccc').attr('fill-opacity',0.8);
@@ -134,8 +127,28 @@ var lg =  {
     },
 
     column: function(dataName){
-        this.dataName = dataName;
-        this.labelName = dataName;
+        this._dataName = dataName;
+        this._labelName = dataName;
+        this._scale = d3.scale.linear();
+        this._domain = 'default';
+
+        this.label = function(val){
+            if(typeof val === 'undefined'){
+                return this._labelName;
+            } else {
+                this._labelName=val;
+                return this;
+            }        
+        };
+
+        this.domain = function(val){
+            if(typeof val === 'undefined'){
+                return this._domain;
+            } else {
+                this._domain=val;
+                return this;
+            }        
+        };                
     },
 
     grid: function(id){
@@ -235,25 +248,43 @@ var lg =  {
         };        
 
         this.init = function(){
-        	this.render(this._id,this._data,this._nameAttr,this._joinAttr,this._valuesList,this._width,this._height);
-        }
+        	this.render();
+        };
+
+        this._initColumns = function(columns){
+            var parent = this;
+            var newColumns = [];
+            columns.forEach(function(c){
+                if(typeof c === 'string'){ 
+                    var column = new lg.column(c);
+                    column.domain([0, d3.max(parent._data,function(d){return Number(d[column._dataName]);})]);                  
+                    newColumns.push(column);
+                } else {
+                    if(c._domain=='default'){
+                        c.domain([0, d3.max(parent._data,function(d){return Number(d[c._dataName]);})]);
+                    }
+                    newColumns.push(c);
+                }                
+            });
+            return newColumns;
+        };
 
         this.render = function(){
-        	this._render(this._id,this._data,this._nameAttr,this._joinAttr,this._columns,this._width,this._height);
-        }
+        	this._render(this._id,this._data,this._nameAttr,this._joinAttr,this._initColumns(this._columns),this._width,this._height);
+        };
 
-        this._render = function(id,data,nameAttr,joinAttr,valuesList,width,height){
+        this._render = function(id,data,nameAttr,joinAttr,columns,width,height){
 
         	var _parent = this;
 
             this._properties.width = this._width - this._properties.margin.left - this._properties.margin.right;
             this._properties.height = this._height - this._properties.margin.top - this._properties.margin.bottom;
 
-            this._properties.boxWidth = this._properties.width/valuesList.length-this._hWhiteSpace;
+            this._properties.boxWidth = this._properties.width/columns.length-this._hWhiteSpace;
             this._properties.boxHeight = this._properties.height/data.length-this._vWhiteSpace;      
             this._properties.x = [];
-            valuesList.forEach(function(v,i){
-				_parent._properties.x[i] = d3.scale.linear().range([0, _parent._properties.boxWidth]).domain([0, d3.max(data,function(d){return Number(d[v]);})]);             	
+            columns.forEach(function(v,i){
+                _parent._properties.x[i] = v._scale.range([0, _parent._properties.boxWidth]).domain(v._domain);     	
             });
 
             var _grid = d3.select(id)
@@ -274,17 +305,16 @@ var lg =  {
 
             var tipsort = d3.tip().attr('class', 'd3-tip').html(function(d,i) {return "Click to sort"});     
 
-            valuesList.forEach(function(v,i){
+            columns.forEach(function(v,i){
             	var g = _grid.append("g").attr('class','bars');
-            		
             	data.sort(function(a, b) {
-                    if(a[v]==null || isNaN(a[v]) || a[v]===''){
+                    if(a[v._dataName]==null || isNaN(a[v._dataName]) || a[v._dataName]===''){
                         return -1;
                     }
-                    if(b[v]==null || isNaN(b[v]) || b[v]===''){
+                    if(b[v._dataName]==null || isNaN(b[v._dataName]) || b[v._dataName]===''){
                         return 1;
                     }                    
-    				return parseFloat(a[v]) - parseFloat(b[v]);
+    				return parseFloat(a[v._dataName]) - parseFloat(b[v._dataName]);
 				});
 
 	            data.forEach(function(d,i){
@@ -301,7 +331,7 @@ var lg =  {
                     var nd = {};
                     nd.pos = d.pos;
                     nd.join = d[_parent._joinAttr];
-                    nd.value = d[v];
+                    nd.value = d[v._dataName];
                     newData.push(nd);
                 });
 
@@ -332,20 +362,20 @@ var lg =  {
 	            var g = _grid.append("g");
 
 	            g.append("text")
-		            .text(v)        
+		            .text(v._labelName)        
 	                .attr("x",0)
 	                .attr("y",0)               
 	                .style("text-anchor", "front")
 		            .attr("transform", "translate(" + (_xTransform+ _parent._properties.boxWidth/2-10) + "," + -10 + ") rotate(-35)" )
 		            .attr("class","sortLabel")
 		            .on("click",function(){
-		            	_parent._update(data,valuesList,d3.select(this).text(),nameAttr);
+		            	_parent._update(data,columns,v._dataName,nameAttr);
 		            });
 
                 d3.selectAll('.sortLabel').call(tipsort);
 
 		        g.append("text")
-		            .text(d3.format(".4s")(d3.max(data,function(d){return Number(d[v]);})))        
+		            .text(d3.format(".4s")(v._domain[v._domain.length-1]))        
 	                .attr("x",_parent._properties.boxWidth-5)
 	                .attr("y",_parent._properties.height+_parent._vWhiteSpace)               
 	                .style("text-anchor", "front")
@@ -364,7 +394,7 @@ var lg =  {
 	                .attr("stroke", "#ddd");
 
 		        g.append("text")
-		            .text("0")        
+		            .text(d3.format(".4s")(v._domain[0]))        
 	                .attr("x",-5)
 	                .attr("y",_parent._properties.height+_parent._vWhiteSpace)               
 	                .style("text-anchor", "front")
@@ -489,8 +519,7 @@ var lg =  {
                     
         }
 
-        this._update = function(data,valuesList,sortBy,nameAttr){
-
+        this._update = function(data,columns,sortBy,nameAttr){
         	var _parent = this;
         	data.sort(function(a, b) {
                     if(a[sortBy]==null || isNaN(a[sortBy]) || a[sortBy]===''){
@@ -510,7 +539,7 @@ var lg =  {
             	return a[_parent._nameAttr].localeCompare(b[_parent._nameAttr]);
 			});
 
-			valuesList.forEach(function(v,i){
+			columns.forEach(function(v,i){
 
                 var newData = [];
 
@@ -518,7 +547,7 @@ var lg =  {
                     var nd = {};
                     nd.pos = d.pos;
                     nd.join = d[_parent._joinAttr];
-                    nd.value = d[v];
+                    nd.value = d[v._dataName];
                     newData.push(nd);
                 });
 
