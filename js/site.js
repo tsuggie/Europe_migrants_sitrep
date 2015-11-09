@@ -2,7 +2,8 @@
 	- change min/max values of cardinal attributes - check with Rachel, might not be necessary for now
 	- use/display date column?
 	- add shapefile for locations - Simon to update library first - need qgis to accept utf-8
-	- remove/change headline figures
+	- realign headline figures
+	- objectify stats generation
 */
  
 function generateDashboard(data,geom){
@@ -25,8 +26,25 @@ function generateDashboard(data,geom){
         }
     })
     .colors(['#bd0026','#2E7D32']);
+	
+	var appFundLocal = new lg.column('Appeal funding (local currency)').domain([0,2500000]).axisLabels(true); //.valueAccessor(function(d){
+ /*        if(d=='N/A'){
+            return -1;
+        } else {
+            return null;
+        }
+    })
+    .colorAccessor(function(d,i,max){
+        if(d=='N/A'){
+            return 1;
+        } else {
+            return 0;
+        }
+    })
+    .colors(['#bd0026','#2E7D32']); */
 
-
+	var lastUpdate = new lg.column('Last data update').axisLabels(false);
+	
     var grid = new lg.grid('#grid')
         .data(data)
         .width($('#grid').width())
@@ -35,7 +53,7 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
- 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests','Total people reached', domAppeal, 'Appeal funding (local currency)', 'Appeal funding (CHF)', 'Last data update']) 
+ 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests','Total people reached', domAppeal, appFundLocal, 'Appeal funding (CHF)', lastUpdate]) 
         .margins({top: 165, right: 110, bottom: 20, left: 140});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
