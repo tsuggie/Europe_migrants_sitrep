@@ -126,7 +126,7 @@ function generateStats(id,data){
 	}; 
 	
     var html = '';
-    html = html + '<div class="stat_title">Total RC interactions"</div><div class="stat">&nbsp&nbsp'+ formatComma(totalPplReached) + '</div>';
+    html = html + '<div class="stat_title">Total RC interactions</div><div class="stat">&nbsp&nbsp'+ formatComma(totalPplReached) + '</div>';
     html = html + '<div class="stat_title">Volunteers Mobilised</div><div class="stat">&nbsp&nbsp'+ formatComma(totalVols) + '</div>';   
     html = html + '</div>';
 	html = html + '<div class="stat_title">Total Food Distributions</div><div class="stat">&nbsp&nbsp'+ formatComma(totalFoodDists) + '</div>';   
