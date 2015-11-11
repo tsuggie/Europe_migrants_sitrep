@@ -414,7 +414,7 @@ var lg =  {
                     .attr("x",0)
                     .attr("y",0)               
                     .style("text-anchor", "front")
-                    .attr("transform", "translate(" + (_xTransform+ _parent._properties.boxWidth/2-10) + "," + -10 + ") rotate(-35)" )
+                    .attr("transform", "translate(" + (_xTransform+ _parent._properties.boxWidth/2-10) + "," + -10 + ") rotate(-65)" )
                     .attr("class","sortLabel")
                     .on("click",function(){
                         _parent._update(data,columns,v,nameAttr);
