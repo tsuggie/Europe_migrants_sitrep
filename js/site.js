@@ -1,17 +1,19 @@
 /* HEIDI NEXT:
-	- change min/max values of cardinal attributes - check with Rachel, might not be necessary for now
-	- use/display date column?
-	- add shapefile for locations - Simon to update library first - need qgis to accept utf-8
+	- colours for date column?
+	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
 	- realign headline figures
 	- objectify stats generation
+	- *** display which attribute is being displayed on map - Simon to update library
+	- ? add interactive tips for how to use dashboard - see intro.js library - see Simon's Nepal earthquake RC 3W
+	- Macedonia country name issue - leave as is for now
 */
  
 function generateDashboard(data,geom){
     var map = new lg.map('#map').geojson(geom).joinAttr('Iso_Code').zoom(3).center([53.5,20]);
 	
-	var resLocs = new lg.column('Response Locations').domain([0,400]);
+	var resLocs = new lg.column('Response Locations');   //change this 
 	
-	var pplReached = new lg.column('Total RC interactions');
+	var pplReached = new lg.column('Total people reached').label('Total RC interactions');
 	
 	var domAppeal = new lg.column('Domestic appeal (Y/N)').domain([0,1]).axisLabels(false).valueAccessor(function(d){
         if(d=='Yes' || d== 'No'){
@@ -29,7 +31,7 @@ function generateDashboard(data,geom){
     })
     .colors(['#bd0026','#2E7D32']);
 	
-	var appFundLocal = new lg.column('Appeal funding (local currency)').domain([0,2500000]).axisLabels(true); //.valueAccessor(function(d){
+	var appFundLocal = new lg.column('Appeal funding (local currency)').axisLabels(true); //.valueAccessor(function(d){
  /*        if(d=='N/A'){
             return -1;
         } else {
@@ -44,8 +46,28 @@ function generateDashboard(data,geom){
         }
     })
     .colors(['#bd0026','#2E7D32']); */
+	
+	
+	var maxCHF = d3.max(data, function(d){
+		if (!isNaN(d['Appeal funding (CHF)'])){return d['Appeal funding (CHF)'];}
+	});
+	var appFundCHF = new lg.column('Appeal funding (CHF)').domain([0,Math.ceil(maxCHF).toPrecision(2)]);
 
-	var lastUpdate = new lg.column('Last data update').axisLabels(false);
+	
+	var updateDates = new lg.column('Last data update')
+     .scale(d3.time.scale())
+     .domain([d3.min(data,function(d){
+        return new Date (d['Last data update'].getFullYear(), d['Last data update'].getMonth(), (d['Last data update'].getDate()-1));
+    }),d3.max(data,function(d){return d['Last data update']})])
+    .labelAccessor(function(d){
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+        return day +'-'+month;
+    })
+    .valueAccessor(function(d){
+        return Number(d);
+    });
+	 
 	
     var grid = new lg.grid('#grid')
         .data(data)
@@ -55,7 +77,7 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
- 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, domAppeal, appFundLocal, 'Appeal funding (CHF)', lastUpdate]) 
+ 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, domAppeal, appFundLocal, appFundCHF, updateDates]) 
         .margins({top: 165, right: 110, bottom: 20, left: 140});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
@@ -186,9 +208,14 @@ var geomCall = $.ajax({
 
 $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
     var geom = topojson.feature(geomArgs[0],geomArgs[0].objects.geom);
-    console.log(geom);
+    //console.log(geom);
     var data = hxlProxyToJSON(dataArgs[0],true);
-    console.log(data);
+    //console.log(data);
+	var dateFormat = d3.time.format("%d %b %Y");
+    data.forEach(function(d){
+        d['Last data update'] = dateFormat.parse(d['Last data update']);
+    });
     generateDashboard(data,geom);
 	generateStats("#key_stats",data);
 });
+
