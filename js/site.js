@@ -11,6 +11,8 @@ function generateDashboard(data,geom){
 	
 	var resLocs = new lg.column('Response Locations').domain([0,400]);
 	
+	var pplReached = new lg.column('Total RC interactions');
+	
 	var domAppeal = new lg.column('Domestic appeal (Y/N)').domain([0,1]).axisLabels(false).valueAccessor(function(d){
         if(d=='Yes' || d== 'No'){
             return 1;
@@ -53,7 +55,7 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
- 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests','Total people reached', domAppeal, appFundLocal, 'Appeal funding (CHF)', lastUpdate]) 
+ 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, domAppeal, appFundLocal, 'Appeal funding (CHF)', lastUpdate]) 
         .margins({top: 165, right: 110, bottom: 20, left: 140});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
@@ -124,7 +126,7 @@ function generateStats(id,data){
 	}; 
 	
     var html = '';
-    html = html + '<div class="stat_title">Total People Reached</div><div class="stat">&nbsp&nbsp'+ formatComma(totalPplReached) + '</div>';
+    html = html + '<div class="stat_title">Total RC interactions"</div><div class="stat">&nbsp&nbsp'+ formatComma(totalPplReached) + '</div>';
     html = html + '<div class="stat_title">Volunteers Mobilised</div><div class="stat">&nbsp&nbsp'+ formatComma(totalVols) + '</div>';   
     html = html + '</div>';
 	html = html + '<div class="stat_title">Total Food Distributions</div><div class="stat">&nbsp&nbsp'+ formatComma(totalFoodDists) + '</div>';   
