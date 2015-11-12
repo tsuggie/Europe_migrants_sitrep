@@ -1,10 +1,11 @@
 /* HEIDI NEXT:
+	- row headings - right justify, horizontal highlight lines more obvious?
 	- realign headline figures
 	- objectify stats generation
 	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
 	- *** display which attribute is being displayed on map - Simon to update library
 	- ? add interactive tips for how to use dashboard - see intro.js library - see Simon's Nepal earthquake RC 3W
-	- Macedonia country name issue - leave as is for now
+	- Macedonia country name issue - add in to alt name file
 */
  
 function generateDashboard(data,geom){
