@@ -1,8 +1,7 @@
 /* HEIDI NEXT:
-	- colours for date column?
-	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
 	- realign headline figures
 	- objectify stats generation
+	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
 	- *** display which attribute is being displayed on map - Simon to update library
 	- ? add interactive tips for how to use dashboard - see intro.js library - see Simon's Nepal earthquake RC 3W
 	- Macedonia country name issue - leave as is for now
@@ -15,7 +14,7 @@ function generateDashboard(data,geom){
 	
 	var pplReached = new lg.column('Total people reached').label('Total RC interactions');
 	
-	var domAppeal = new lg.column('Domestic appeal (Y/N)').domain([0,1]).axisLabels(false).valueAccessor(function(d){
+/* 	var domAppeal = new lg.column('Domestic appeal (Y/N)').domain([0,1]).axisLabels(false).valueAccessor(function(d){
         if(d=='Yes' || d== 'No'){
             return 1;
         } else {
@@ -29,45 +28,47 @@ function generateDashboard(data,geom){
             return 0;
         }
     })
-    .colors(['#bd0026','#2E7D32']);
+    .colors(['#bd0026','#2E7D32']); 
 	
-	var appFundLocal = new lg.column('Appeal funding (local currency)').axisLabels(true); //.valueAccessor(function(d){
- /*        if(d=='N/A'){
-            return -1;
-        } else {
-            return null;
-        }
-    })
-    .colorAccessor(function(d,i,max){
-        if(d=='N/A'){
-            return 1;
-        } else {
-            return 0;
-        }
-    })
-    .colors(['#bd0026','#2E7D32']); */
-	
+	var appFundLocal = new lg.column('Appeal funding (local currency)').axisLabels(true); 
 	
 	var maxCHF = d3.max(data, function(d){
 		if (!isNaN(d['Appeal funding (CHF)'])){return d['Appeal funding (CHF)'];}
 	});
 	var appFundCHF = new lg.column('Appeal funding (CHF)').domain([0,Math.ceil(maxCHF).toPrecision(2)]);
-
+	*/
 	
-	var updateDates = new lg.column('Last data update')
-     .scale(d3.time.scale())
-     .domain([d3.min(data,function(d){
-        return new Date (d['Last data update'].getFullYear(), d['Last data update'].getMonth(), (d['Last data update'].getDate()-1));
-    }),d3.max(data,function(d){return d['Last data update']})])
+	var updateDates = new lg.column('Last data update').axisLabels(false)
+    .scale(d3.time.scale())
+	.domain([0,1])
     .labelAccessor(function(d){
-        var month = d.getMonth() + 1;
-        var day = d.getDate();
-        return day +'-'+month;
+		if (Number(d)!=0){
+			var year = d.getFullYear()
+			var month = d.getMonth() + 1;
+			var day = d.getDate();
+			return day+'/'+month+'/'+year;
+		} else {
+            return 'No data reported';
+        }
     })
-    .valueAccessor(function(d){
-        return Number(d);
-    });
-	 
+	.valueAccessor(function(d){
+        if (Number(d)!=0){
+			return 1;
+        } else {
+            return null;
+        } 
+    })
+    .colorAccessor(function(d,i,max){    
+        if (Date.now()-Number(d)<=6.912e+8){   //updated within last 8 days = 6.912e+8ms
+            return 0;
+		} else if (Date.now()-Number(d)>6.912e+8){  //updated before last 8 days
+			return 1;
+        } /*  else {
+            return 2;
+        }  */
+    })
+    .colors(['#2E7D32','#ff8c1a']);  
+	
 	
     var grid = new lg.grid('#grid')
         .data(data)
@@ -77,7 +78,7 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
- 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, domAppeal, appFundLocal, appFundCHF, updateDates]) 
+ 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, updateDates]) 
         .margins({top: 165, right: 110, bottom: 20, left: 140});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
