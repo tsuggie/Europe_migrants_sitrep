@@ -73,7 +73,7 @@ function generateDashboard(data,geom){
     var grid = new lg.grid('#grid')
         .data(data)
         .width($('#grid').width())
-        .height(600)
+        .height(750)
         .nameAttr('Country')
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
