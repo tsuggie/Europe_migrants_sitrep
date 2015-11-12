@@ -79,7 +79,7 @@ function generateDashboard(data,geom){
         .hWhiteSpace(10)
         .vWhiteSpace(5)
  		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, updateDates]) 
-        .margins({top: 165, right: 110, bottom: 20, left: 230});
+        .margins({top: 165, right: 50, bottom: 20, left: 290});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
 	//lg.colors(['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043']); //purple-red multi-hue
