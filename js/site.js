@@ -1,4 +1,4 @@
-/* HEIDI NEXT:
+/* NEXT:
 	- row headings - right justify, horizontal highlight lines more obvious? - needs to be done in library
 	- realign headline figures
 	- objectify stats generation
@@ -159,19 +159,17 @@ function generateStats(id,data){
 		if (!isNaN(numConnect)) {totalConnectivity += numConnect;};
 	}; 
 	
-    var html = '';
-    html = html + '<div class="stat_title">Total RC interactions</div><div class="stat">&nbsp&nbsp'+ formatComma(totalPplReached) + '</div>';
-    html = html + '<div class="stat_title">Volunteers Mobilised</div><div class="stat">&nbsp&nbsp'+ formatComma(totalVols) + '</div>';   
-    html = html + '</div>';
-	html = html + '<div class="stat_title">Total Food Distributions</div><div class="stat">&nbsp&nbsp'+ formatComma(totalFoodDists) + '</div>';   
-    html = html + '</div>';
-	html = html + '<div class="stat_title">Total Health Services</div><div class="stat">&nbsp&nbsp'+ formatComma(totalMeds) + '</div>';   
-    html = html + '</div>';
-	html = html + '<div class="stat_title">Total Textiles Provided</div><div class="stat">&nbsp&nbsp'+ formatComma(totalTextiles) + '</div>';   
-    html = html + '</div>';
-	html = html + '<div class="stat_title">Total Connectivity</div><div class="stat">&nbsp&nbsp'+ formatComma(totalConnectivity) + '</div>';   
-    html = html + '</div>';
-    $(id).html(html);
+	var html = '';
+	html = html + '<table class="stats_table">';
+	html = html + '<tr><td class="stat_title">Total RC interactions</td><td class="stat">' + formatComma(totalPplReached) + '</td>';
+	html = html + '<tr><td class="stat_title">Volunteers Mobilised</td><td class="stat">' + formatComma(totalVols) + '</td>';
+	html = html + '<tr><td class="stat_title">Total Food Distributions</td><td class="stat">' + formatComma(totalFoodDists) + '</td>';
+	html = html + '<tr><td class="stat_title">Total Health Services</td><td class="stat">' + formatComma(totalMeds) + '</td>';
+	html = html + '<tr><td class="stat_title">Total Textiles Provided</td><td class="stat">' + formatComma(totalTextiles) + '</td>';
+	html = html + '<tr><td class="stat_title">Total Connectivity</td><td class="stat">' + formatComma(totalConnectivity) + '</td>';
+	html = html + '</table>';
+	$(id).html(html);
+	
 }
 
 /*
@@ -229,5 +227,6 @@ $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
     });
     generateDashboard(data,geom);
 	generateStats("#key_stats",data);
+	
 });
 
