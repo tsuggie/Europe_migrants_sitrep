@@ -1,6 +1,5 @@
 /* NEXT:
 	- row headings - right justify, horizontal highlight lines more obvious? - needs to be done in library
-	- realign headline figures
 	- objectify stats generation
 	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
 	- *** display which attribute is being displayed on map - Simon to update library
