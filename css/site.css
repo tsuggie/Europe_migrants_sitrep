@@ -15,6 +15,10 @@
 	width: 100%;
 }
 
+#grid {
+	width: 100%;
+}
+
 .stat_title{
 	display: inline-block;
 	margin-top: 18px;
