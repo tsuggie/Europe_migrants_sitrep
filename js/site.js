@@ -1,11 +1,10 @@
 /* HEIDI NEXT:
-	- row headings - right justify, horizontal highlight lines more obvious?
+	- row headings - right justify, horizontal highlight lines more obvious? - needs to be done in library
 	- realign headline figures
 	- objectify stats generation
 	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
 	- *** display which attribute is being displayed on map - Simon to update library
 	- ? add interactive tips for how to use dashboard - see intro.js library - see Simon's Nepal earthquake RC 3W
-	- Macedonia country name issue - add in to alt name file
 */
  
 function generateDashboard(data,geom){
@@ -38,13 +37,15 @@ function generateDashboard(data,geom){
 	});
 	var appFundCHF = new lg.column('Appeal funding (CHF)').domain([0,Math.ceil(maxCHF).toPrecision(2)]);
 	*/
+
+	
 	
 	var updateDates = new lg.column('Last data update').axisLabels(false)
     .scale(d3.time.scale())
-	.domain([0,1])
+ 	.domain([0,Date.now()])   
     .labelAccessor(function(d){
 		if (Number(d)!=0){
-			var year = d.getFullYear()
+			var year = d.getFullYear();
 			var month = d.getMonth() + 1;
 			var day = d.getDate();
 			return day+'/'+month+'/'+year;
@@ -52,28 +53,37 @@ function generateDashboard(data,geom){
             return 'No data reported';
         }
     })
-	.valueAccessor(function(d){
+ 	.valueAccessor(function(d){
         if (Number(d)!=0){
-			return 1;
+			return Number(d);
         } else {
             return null;
         } 
-    })
+    }) 
     .colorAccessor(function(d,i,max){    
         if (Date.now()-Number(d)<=6.912e+8){   //updated within last 8 days = 6.912e+8ms
             return 0;
 		} else if (Date.now()-Number(d)>6.912e+8){  //updated before last 8 days
 			return 1;
-        } /*  else {
-            return 2;
-        }  */
+        } 
     })
     .colors(['#2E7D32','#ff8c1a']);  
 	
 	
+	function getGridWidth(divWidth) {
+		if (divWidth<750) {
+			return 750;
+		} else {
+			return divWidth;
+		};
+	};
+ 	var grid_width = getGridWidth($("#grid").width());
+	//console.log($("#grid").width(), grid_width);
+			 
+			 
     var grid = new lg.grid('#grid')
         .data(data)
-        .width($('#grid').width())
+        .width(grid_width)
         .height(750)
         .nameAttr('Country')
         .joinAttr('ISO 3 code')
