@@ -60,9 +60,9 @@ function generateDashboard(data,geom){
         } 
     }) 
     .colorAccessor(function(d,i,max){    
-        if (Date.now()-Number(d)<=6.912e+8){   //updated within last 8 days = 6.912e+8ms
+        if (Date.now()-Number(d)<=1.123e+9){   //updated within last 13 days = 1.123e+9ms
             return 0;
-		} else if (Date.now()-Number(d)>6.912e+8){  //updated before last 8 days
+		} else if (Date.now()-Number(d)>1.123e+9){  //updated before last 13 days
 			return 1;
         } 
     })
