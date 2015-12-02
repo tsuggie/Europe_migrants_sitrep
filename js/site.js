@@ -1,13 +1,11 @@
 /* NEXT CHANGES:
-	- row headings - right justify, horizontal highlight lines more obvious? - needs to be done in library
 	- objectify stats generation
 	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
-	- *** display which attribute is being displayed on map - Simon to update library
 	- ? add interactive tips for how to use dashboard - see intro.js library - see Simon's Nepal earthquake RC 3W
 */
  
 function generateDashboard(data,geom){
-    var map = new lg.map('#map').geojson(geom).joinAttr('Iso_Code').zoom(3).center([53.5,20]);
+    var map = new lg.map('#map').geojson(geom).nameAttr('CNTRY_NAME').joinAttr('Iso_Code').zoom(3).center([53.5,20]);
 	
 	var resLocs = new lg.column('Response Locations');   //change this 
 	
@@ -88,7 +86,7 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
- 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests',pplReached, updateDates]) 
+ 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Active full-time equivalent', 'People in long-term shelter', 'People in short-term shelter', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Hot and cold drinks', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests', 'RFL reunifications', pplReached, updateDates]) 
         .margins({top: 165, right: 50, bottom: 20, left: 290});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
@@ -96,7 +94,9 @@ function generateDashboard(data,geom){
 	//lg.colors(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']); //yellow-orange-red multi-hue
     lg.init();
 
-    $("#map").width($("#map").width()); 
+    $("#map").width($("#map").width());
+
+    console.log(map.map()); 
 }
 
 
