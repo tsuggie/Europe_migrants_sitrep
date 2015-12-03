@@ -1,7 +1,5 @@
 /* NEXT CHANGES:
 	- objectify stats generation
-	- *** add shapefile for locations - Simon to update library first - need qgis to accept utf-8
-	- ? add interactive tips for how to use dashboard - see intro.js library - see Simon's Nepal earthquake RC 3W
 */
  
 function generateDashboard(data,geom){
@@ -87,7 +85,7 @@ function generateDashboard(data,geom){
         .hWhiteSpace(10)
         .vWhiteSpace(5)
  		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Active full-time equivalent', 'People in long-term shelter', 'People in short-term shelter', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Hot and cold drinks', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests', 'RFL reunifications', pplReached, updateDates]) 
-        .margins({top: 165, right: 50, bottom: 20, left: 290});
+        .margins({top: 165, right: 62, bottom: 20, left: 290});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
 	//lg.colors(['#f1eef6','#d7b5d8','#df65b0','#dd1c77','#980043']); //purple-red multi-hue
@@ -170,6 +168,36 @@ function generateStats(id,data){
 	$(id).html(html);
 	
 }
+
+
+$('#intro').click(function(){
+    var intro = introJs();
+    intro.setOptions({
+		steps: [
+		  {
+			intro:"<div style='width: 350px;'><b>This dashboard displays various key indicators for European countries affected by the current Europe Population Movement.</b><br>The map can display any of these indicators, given in the grid below.",
+		  },
+		  {
+			element: '#map',
+			intro: "<div style='width: 300px;'><b>The map displays values for the key indicator <i>(i.e. column)</i> either <i>selected</i> or <i>hovered over</i> in the grid below.</b><br><i>[Note: when the map first loads, no data is displayed].</i><br>1. When an indicator is displayed on the map, its column heading appears in bold in the grid below, and its maximum and minimum values are displayed at the bottom of the column.<br>2. Hovering over individual countries in the map displays their respective key indicator values in the top right.",
+			position: 'right'
+		  },
+		  {
+			element: '#key_stats_container',
+			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These are totals for all countries.",
+			position: 'left'
+		  },
+		  {
+			element: '#grid',
+			intro: "<div style='width: 500px;'><b>The grid displays all key indicator values for all countries. Individual values can be viewed by hovering over a grid 'cell'. To display a key indicator on the map, a column must either be <i>selected</i> or <i>hovered over</i>.</b><br>1. To <i>select</i> an indicator and display it on the map, click on the indicator column's data values (but not on its heading).<br>2. To <i>de-select</i> an indicator, click a second time on the indicator column's data values (but again not on its heading).<br>3. When no indicator is selected, it is possible to hover over an indicator column (its data values <i>or</i> its heading) to display it on the map.<br>4. Click on an indicator's column heading to sort the data from largest to smallest (or most recent to least recent for the date column).<br>5. To highlight a country in the map, hover over its row's data values (but not country name) in the grid.",
+			position: 'bottom'
+		  },		  
+		]
+	});
+    intro.start();
+});
+
+
 
 /*
 function stickydiv(){
