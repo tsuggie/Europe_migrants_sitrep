@@ -158,7 +158,7 @@ function generateStats(id,data){
 	
 	var html = '';
 	html = html + '<table class="stats_table">';
-	html = html + '<tr><td class="stat_title">Total RC interactions</td><td class="stat">' + formatComma(totalPplReached) + '</td>';
+	/* html = html + '<tr><td class="stat_title">Total RC interactions</td><td class="stat">' + formatComma(totalPplReached) + '</td>'; */
 	html = html + '<tr><td class="stat_title">Volunteers Mobilised</td><td class="stat">' + formatComma(totalVols) + '</td>';
 	html = html + '<tr><td class="stat_title">Total Food Distributions</td><td class="stat">' + formatComma(totalFoodDists) + '</td>';
 	html = html + '<tr><td class="stat_title">Total Health Services</td><td class="stat">' + formatComma(totalMeds) + '</td>';
