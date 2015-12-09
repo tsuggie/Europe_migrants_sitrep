@@ -248,7 +248,7 @@ $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
     //console.log(geom);
     var data = hxlProxyToJSON(dataArgs[0],true);
     //console.log(data);
-	var dateFormat = d3.time.format("%d %b %Y");
+	var dateFormat = d3.time.format("%m/%d/%Y");
     data.forEach(function(d){
         d['Last data update'] = dateFormat.parse(d['Last data update']);
     });
