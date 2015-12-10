@@ -1,9 +1,29 @@
 /* NEXT CHANGES:
 	- objectify stats generation
+	- changes to tour - subdivide final step into sub-component steps; add in imgs of sub-divs?
+	- table stats for individual countries - make more aesthetic
+	- table stats for individual countries - check incorrect country name joins (Bosnia, Macedonia so far)
+	
+	
+Notes for Henk:
+- Provision of connectivity - not for this week? - its the only distribution/connectivity attribute that does not have a supplementary column for this week.
+- I've noted that Bosnia & H are not responding - but we are updating their date to be the most recent. Is this correct?
+- Please note the differences between No data, N/A, and 0 - all N/As are replace with 'No data'.
+	
 */
+
+// Countries in shapefile but  not in spreadsheet: e.g. Georgia, Estonia, Latvia, Moldova, Ukraine, Russia, Slovakia, Kosovo, Turkey
+// Bosnia, Macedonia
  
 function generateDashboard(data,geom){
-    var map = new lg.map('#map').geojson(geom).nameAttr('CNTRY_NAME').joinAttr('Iso_Code').zoom(3).center([53.5,20]);
+    //var map = new lg.map('#map').geojson(geom).nameAttr('CNTRY_NAME').joinAttr('Iso_Code').zoom(3).center([53.5,20]).onClick(function(f){console.log(f)});
+	
+	var map = new lg.map('#map').geojson(geom).nameAttr('CNTRY_NAME').joinAttr('Iso_Code').zoom(3).center([53.5,20])
+				.onClick(function(country_geom){
+					outputCountryStats(country_geom, data);
+					//console.log("country: ", country_geom.properties.CNTRY_NAME);
+					//console.log("data: ", data);
+				});
 	
 	var resLocs = new lg.column('Response Locations');   //change this 
 	
@@ -132,9 +152,10 @@ function generateStats(id,data){
 	totalMeds = 0;
 	totalTextiles = 0;
 	totalConnectivity = 0;
+
 	
 	for(var i = 0; i < data.length; i++) {
- 		numPplReached = parseInt(data[i]["Total people reached"]);
+ 		//numPplReached = parseInt(data[i]["Total people reached"]);
 		numVols = parseInt(data[i]["Active volunteers"]);
 		numFoodParc = parseInt(data[i]["Distributions: Food parcels"]);
 		numMeals = parseInt(data[i]["Distributions: Meals"]);
@@ -144,7 +165,7 @@ function generateStats(id,data){
 		numClothing = parseInt(data[i]["Distributions: Clothing"]); 
 		numBlanketsSlBags = parseInt(data[i]["Distributions: Blankets and sleeping bags"]); 
 		numConnect = parseInt(data[i]["Provision of connectivity"]);
-		if (!isNaN(numPplReached)) {totalPplReached += numPplReached;};
+		//if (!isNaN(numPplReached)) {totalPplReached += numPplReached;};
 		if (!isNaN(numVols)) {totalVols += numVols;}; 
 		if (!isNaN(numFoodParc)) {totalFoodDists += numFoodParc;}; 
 		if (!isNaN(numMeals)) {totalFoodDists += numMeals;}; 
@@ -158,17 +179,123 @@ function generateStats(id,data){
 	
 	var html = '';
 	html = html + '<table class="stats_table">';
-	/* html = html + '<tr><td class="stat_title">Total RC interactions</td><td class="stat">' + formatComma(totalPplReached) + '</td>'; */
-	html = html + '<tr><td class="stat_title">Volunteers Mobilised</td><td class="stat">' + formatComma(totalVols) + '</td>';
-	html = html + '<tr><td class="stat_title">Total Food Distributions</td><td class="stat">' + formatComma(totalFoodDists) + '</td>';
-	html = html + '<tr><td class="stat_title">Total Health Services</td><td class="stat">' + formatComma(totalMeds) + '</td>';
-	html = html + '<tr><td class="stat_title">Total Textiles Provided</td><td class="stat">' + formatComma(totalTextiles) + '</td>';
-	html = html + '<tr><td class="stat_title">Total Connectivity</td><td class="stat">' + formatComma(totalConnectivity) + '</td>';
+	html = html + '<tr><th class="stat_heading"></th><td class="stat_heading" id="cntry_name">[Click on Country in map]</td><td class="stat_heading">European Total</td>';
+	html = html + '<tr><th class="stat_title">Red Cross Interactions</th><td class="stat" id="cntry_ppl_reached"><i>n/a</i></td><td class="stat"><i>n/a</i></td>'; 
+	html = html + '<tr><th class="stat_title">Volunteers Mobilised</th><td class="stat" id="cntry_vols"><i>n/a</i></td><td class="stat">' + formatComma(totalVols) + '</td>';
+	html = html + '<tr><th class="stat_title">Food Distributions</th><td class="stat" id="cntry_food_dists"><i>n/a</i></td><td class="stat">' + formatComma(totalFoodDists) + '</td>';
+	html = html + '<tr><th class="stat_title">Health Services</th><td class="stat" id="cntry_meds"><i>n/a</i></td><td class="stat">' + formatComma(totalMeds) + '</td>';
+	html = html + '<tr><th class="stat_title">Textiles Provided</th><td class="stat" id="cntry_texts"><i>n/a</i></td><td class="stat">' + formatComma(totalTextiles) + '</td>';
+	html = html + '<tr><th class="stat_title">Connectivity Provided</th><td class="stat" id="cntry_connectivity"><i>n/a</i></td><td class="stat">' + formatComma(totalConnectivity) + '</td>';
 	html = html + '</table>';
 	$(id).html(html);
 	
 }
 
+
+function getCountryStats(countryData) {
+	var formatComma = d3.format(",.0f");
+	var formatPerc = d3.format(",.1%");
+	numPplReached = parseInt(countryData["Total people reached"]);
+			numVols = parseInt(countryData["Active volunteers"]);
+			numFoodParc = parseInt(countryData["Distributions: Food parcels"]);
+			numMeals = parseInt(countryData["Distributions: Meals"]);
+			numMedCare = parseInt(countryData["Provision of medical care"]);
+			numFirstAid = parseInt(countryData["Provision of first aid"]); 
+			numPSS = parseInt(countryData["Provision of psychosocial support"]);
+			numClothing = parseInt(countryData["Distributions: Clothing"]); 
+			numBlanketsSlBags = parseInt(countryData["Distributions: Blankets and sleeping bags"]); 
+			numConnect = parseInt(countryData["Provision of connectivity"]);
+			
+			totalFoodDists = 0;
+			totalMeds = 0;
+			totalTextiles = 0;
+			
+			
+			if (isNaN(numPplReached)) {numPplReached='No data';}
+			else {numPplReached=formatComma(numPplReached)};
+			if (isNaN(numVols)) {numVols='No data';}
+			else {numVols=formatComma(numVols)};
+			
+			if (!isNaN(numFoodParc)) {totalFoodDists += numFoodParc;}; 
+			if (!isNaN(numMeals)) {totalFoodDists += numMeals;}; 
+			if (isNaN(numFoodParc) && isNaN(numMeals)) {totalFoodDists='No data';}
+			else {totalFoodDists=formatComma(totalFoodDists);};
+			
+			if (!isNaN(numMedCare)) {totalMeds += numMedCare; formatComma(totalMeds);};
+			if (!isNaN(numFirstAid)) {totalMeds += numFirstAid; formatComma(totalMeds);}; 
+			if (!isNaN(numPSS)) {totalMeds += numPSS; formatComma(totalMeds);}; 
+			if (isNaN(numMedCare) && isNaN(numFirstAid) && isNaN(numPSS)) {totalMeds='No data';}
+			else {totalMeds=formatComma(totalMeds);};
+			
+			if (!isNaN(numClothing)) {totalTextiles += numClothing; formatComma(totalTextiles);}; 
+			if (!isNaN(numBlanketsSlBags)) {totalTextiles += numBlanketsSlBags; formatComma(totalTextiles);}; 
+			if (isNaN(numClothing) && isNaN(numBlanketsSlBags)) {totalTextiles='No data';}
+			else {totalTextiles=formatComma(totalTextiles);};
+			
+			if (isNaN(numConnect)) {numConnect='No data';}
+			else {numConnect=formatComma(numConnect)};
+			
+			return [numPplReached, numVols, totalFoodDists, totalMeds, totalTextiles, numConnect];
+			
+}
+	
+function outputCountryStats(country, data) {
+	//console.log("country: ", country);
+	//console.log("data: ", data);
+	var formatComma = d3.format(",.0f");
+	var formatPerc = d3.format(",.1%");
+	//console.log("1 - Clicked on ", country.properties.CNTRY_NAME);
+	numPplReached = '<i>n/a</i>';
+	numVols = '<i>n/a</i>';
+	totalFoodDists = '<i>n/a</i>';
+	totalMeds = '<i>n/a</i>';
+	totalTextiles = '<i>n/a</i>';
+	numConnect = '<i>n/a</i>';
+	
+	var updated = 0;
+	
+	countryName = country.properties.CNTRY_NAME;
+	
+	if (country.properties.CNTRY_NAME == 'Bosnia & Herzegovina') {
+		for (var i = 0; i < data.length; i++) {
+			if (data[i]["Country"]=='Bosnia and Herzegovina') {
+				countryName = data[i]["Country"];
+				countryStats = getCountryStats(data[i]);
+				updated = 1;
+			}
+		}
+	}
+	else if (country.properties.CNTRY_NAME == 'Macedonia') {
+		for (var i = 0; i < data.length; i++) {
+			if (data[i]["Country"]=='The former Yugoslav Republic of Macedonia') {
+				countryName = data[i]["Country"];
+				countryStats = getCountryStats(data[i]);
+				updated = 1;
+			}
+		}
+	}
+	else {
+		for (var i = 0; i < data.length; i++) {
+			if (data[i]["Country"] == country.properties.CNTRY_NAME) {				
+				countryStats = getCountryStats(data[i]);
+				updated = 1;
+			}
+		}
+	};
+	
+	if (updated == 0) {
+		countryStats = ['<i>n/a</i>','<i>n/a</i>','<i>n/a</i>','<i>n/a</i>','<i>n/a</i>','<i>n/a</i>'];
+	};
+	
+	$(cntry_name).html(countryName);
+	$(cntry_ppl_reached).html(countryStats[0]);
+	$(cntry_vols).html(countryStats[1]);
+	$(cntry_food_dists).html(countryStats[2]);
+	$(cntry_meds).html(countryStats[3]);
+	$(cntry_texts).html(countryStats[4]);
+	$(cntry_connectivity).html(countryStats[5]);
+	
+}
 
 $('#intro').click(function(){
     var intro = introJs();

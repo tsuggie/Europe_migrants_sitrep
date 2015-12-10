@@ -23,21 +23,48 @@
 	width: 100%;
 }
 
+.stat_heading{
+	margin-top: 18px;
+    font-size:16px;
+	vertical-align: center;
+	text-align: right;
+}
+
+
 .stat_title{
 	margin-top: 18px;
     font-size:16px;
 	vertical-align: center;
 }
 
+
 .stat {
 	text-align: right;
-    font-size:24px;
+    font-size:20px;
+	vertical-align: center;
+}
+
+.stat_heading {
+	font-size:16px;
+	font-weight: bold;
+	text-align: right;
 	vertical-align: center;
 }
 
 .stats_table {
-	width: 300px;
-	height: 280px;
+	width: 400px;
+	height: 320px;
+	table-layout: fixed;
+}
+
+td {
+    overflow: hidden;
+    width: 110px;
+}
+
+th {
+    overflow: hidden;
+    width: 150px;
 }
 
 #intro {
