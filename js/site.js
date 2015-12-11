@@ -178,7 +178,7 @@ function generateStats(id,data){
 	
 	var html = '';
 	html = html + '<table class="stats_table">';
-	html = html + '<tr><th class="stat_heading"></th><td class="stat_heading" id="cntry_name">[Click on Country in map]</td><td class="stat_heading">European Total</td>';
+	html = html + '<tr><th class="stat_heading"></th><td class="stat_heading" id="cntry_name">[Hover over country in map]</td><td class="stat_heading">European Total</td>';
 	html = html + '<tr><th class="stat_title">Red Cross Interactions</th><td class="stat" id="cntry_ppl_reached"><i>n/a</i></td><td class="stat"><i>n/a</i></td>'; 
 	html = html + '<tr><th class="stat_title">Volunteers Mobilised</th><td class="stat" id="cntry_vols"><i>n/a</i></td><td class="stat">' + formatComma(totalVols) + '</td>';
 	html = html + '<tr><th class="stat_title">Food Distributions</th><td class="stat" id="cntry_food_dists"><i>n/a</i></td><td class="stat">' + formatComma(totalFoodDists) + '</td>';
@@ -310,7 +310,7 @@ $('#intro').click(function(){
 		  },
 		  {
 			element: '#key_stats_container',
-			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These are for an individual country that has been clicked on in the map, as well as totals for all countries.",
+			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These appear for individual countries when hovered over in the map. Totals for European countries included in the grid below are also given.",
 			position: 'left'
 		  },
 /* 		  {
