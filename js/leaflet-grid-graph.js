@@ -1,5 +1,5 @@
 var lg =  {
-
+		
     mapRegister:'',
     _gridRegister:[],
     _colors:['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c'],
@@ -32,6 +32,7 @@ var lg =  {
         this._map = '';
         this._info = '';
         this._currentData =[];
+		this._currentColumn = "";
 
         lg.mapRegister = this;
 
@@ -90,14 +91,14 @@ var lg =  {
             }
         }        
 
-		this.onHover = function(val){
+ 		this.onHover = function(val){
             if(typeof val === 'undefined'){
                 return this._onHover;
             } else {
                 this._onHover=val;
                 return this;
             }
-        }   
+        }    
 		
         this._style = function(feature){
             return {
@@ -110,10 +111,6 @@ var lg =  {
         };
 
         this._onClick = function(feature){
-            return feature;
-        }
-		
-		this._onHover = function(feature){
             return feature;
         }
 
@@ -147,8 +144,8 @@ var lg =  {
                     return this._div;
                 };
 
-            this._info.update = function (name) {
-                this._div.innerHTML = (name ? name: 'Hover a country for details');
+            this._info.update = function (name, colName) {
+                this._div.innerHTML = ((name && colName) ? (colName + '<br><p style="font-size: 16px; text-align:right;">' + name) : 'Select a grid column and hover a country for details');
             };
 
             this._info.addTo(map);
@@ -161,8 +158,16 @@ var lg =  {
             return map;
 
             function onEachFeature(feature, layer) {
+				var formatComma = d3.format(",.0f");
                 layer.on("mouseover",function(f,l){
-                    _parent._info.update(f.target.feature.properties[_parent._nameAttr] + ' - ' + findCurrentData(f.target.feature.properties[_parent._joinAttr]));
+					columnName = _parent._currentColumn;
+					dataValue = findCurrentData(f.target.feature.properties[_parent._joinAttr]);
+					if (!isNaN(dataValue)) {
+						dataValue = formatComma(dataValue);
+					};
+					console.log(dataValue);
+                    _parent._info.update(f.target.feature.properties[_parent._nameAttr] + ' - ' + dataValue, columnName);
+					_parent._onHover(f.target.feature);
                 });
 
                 layer.on("mouseout",function(f,l){
@@ -172,13 +177,9 @@ var lg =  {
                 layer.on("click",function(f,l){
                     _parent._onClick(f.target.feature);
                 });
-				
-				layer.on("hover",function(f,l){
-                    _parent._onHover(f.target.feature);
-                });
 
                 function findCurrentData(joinAttr){
-                    var value = 'N/A'; 
+                    var value = 'n/a'; 
                     _parent._currentData.forEach(function(d){
                         if(d.key==joinAttr){
                             value = d.value;
@@ -187,14 +188,19 @@ var lg =  {
 
                     return value;
                 }
+			
             }            
         }
 
         this.colorMap = function (data,column){
 
-            this._currentData = data;
+            this._currentData = data;	
+			//var _colName = column._labelName;
+			//console.log("column name = ", _colName);
+			this._currentColumn = column._labelName; 
+			
             var _parent = this;
-
+			
             var max = d3.max(data,function(d){
                 if(isNaN(d.value)){
                     dn=0;
@@ -212,6 +218,8 @@ var lg =  {
                     d3.selectAll('.dashgeom'+d.key).attr('fill',column._colors[c]).attr('fill-opacity',0.8);
                 }
             });
+			
+			
         }
     },
 
