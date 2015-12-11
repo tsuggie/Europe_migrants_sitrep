@@ -2,7 +2,6 @@
 	- objectify stats generation
 	- changes to tour - subdivide final step into sub-component steps; add in imgs of sub-divs?
 	- table stats for individual countries - make more aesthetic
-	- table stats for individual countries - check incorrect country name joins (Bosnia, Macedonia so far)
 	
 	
 Notes for Henk:
@@ -19,10 +18,10 @@ function generateDashboard(data,geom){
     //var map = new lg.map('#map').geojson(geom).nameAttr('CNTRY_NAME').joinAttr('Iso_Code').zoom(3).center([53.5,20]).onClick(function(f){console.log(f)});
 	
 	var map = new lg.map('#map').geojson(geom).nameAttr('CNTRY_NAME').joinAttr('Iso_Code').zoom(3).center([53.5,20])
-				.onClick(function(country_geom){
+				.onHover(function(country_geom){
 					outputCountryStats(country_geom, data);
-					//console.log("country: ", country_geom.properties.CNTRY_NAME);
-					//console.log("data: ", data);
+					console.log("country: ", country_geom.properties.CNTRY_NAME);
+					console.log("data: ", data);
 				});
 	
 	var resLocs = new lg.column('Response Locations');   //change this 
@@ -179,7 +178,7 @@ function generateStats(id,data){
 	
 	var html = '';
 	html = html + '<table class="stats_table">';
-	html = html + '<tr><th class="stat_heading"></th><td class="stat_heading" id="cntry_name">[Click on Country in map]</td><td class="stat_heading">European Total</td>';
+	html = html + '<tr><th class="stat_heading"></th><td class="stat_heading" id="cntry_name">[Hover over country in map]</td><td class="stat_heading">European Total</td>';
 	html = html + '<tr><th class="stat_title">Red Cross Interactions</th><td class="stat" id="cntry_ppl_reached"><i>n/a</i></td><td class="stat"><i>n/a</i></td>'; 
 	html = html + '<tr><th class="stat_title">Volunteers Mobilised</th><td class="stat" id="cntry_vols"><i>n/a</i></td><td class="stat">' + formatComma(totalVols) + '</td>';
 	html = html + '<tr><th class="stat_title">Food Distributions</th><td class="stat" id="cntry_food_dists"><i>n/a</i></td><td class="stat">' + formatComma(totalFoodDists) + '</td>';
@@ -311,14 +310,39 @@ $('#intro').click(function(){
 		  },
 		  {
 			element: '#key_stats_container',
-			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These are totals for all countries.",
+			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These appear for individual countries when hovered over in the map. Totals for European countries included in the grid below are also given.",
 			position: 'left'
 		  },
+/* 		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'><b>The grid displays all key indicator values for all countries. Individual values can be viewed by hovering over a grid 'cell'. To display a key indicator on the map, a column must either be <i>selected</i> or <i>hovered over</i>.</b>",
+			position: 'bottom'
+		  },	
 		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'>1. To <i>select</i> an indicator and display it on the map, click on the indicator column's data values (but not on its heading).<br/>2. To <i>de-select</i> an indicator, click a second time on the indicator column's data values (but again not on its heading).",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'>3. When no indicator is selected, it is possible to hover over an indicator column (its data values <i>or</i> its heading) to display it on the map.",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'>4. Click on an indicator's column heading to sort the data from largest to smallest (or most recent to least recent for the date column).",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'>5. To highlight a country in the map, hover over its row's data values (but not country name) in the grid.",
+			position: 'bottom'
+		  }	 */
+ 		  {
 			element: '#grid',
 			intro: "<div style='width: 500px;'><b>The grid displays all key indicator values for all countries. Individual values can be viewed by hovering over a grid 'cell'. To display a key indicator on the map, a column must either be <i>selected</i> or <i>hovered over</i>.</b><br>1. To <i>select</i> an indicator and display it on the map, click on the indicator column's data values (but not on its heading).<br>2. To <i>de-select</i> an indicator, click a second time on the indicator column's data values (but again not on its heading).<br>3. When no indicator is selected, it is possible to hover over an indicator column (its data values <i>or</i> its heading) to display it on the map.<br>4. Click on an indicator's column heading to sort the data from largest to smallest (or most recent to least recent for the date column).<br>5. To highlight a country in the map, hover over its row's data values (but not country name) in the grid.",
 			position: 'bottom'
-		  },		  
+		  } 
 		]
 	});
     intro.start();
