@@ -311,14 +311,39 @@ $('#intro').click(function(){
 		  },
 		  {
 			element: '#key_stats_container',
-			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These are totals for all countries.",
+			intro: "<div style='width: 120px;'><b>Key statistics are displayed here.</b><br>These are for an individual country that has been clicked on in the map, as well as totals for all countries.",
 			position: 'left'
 		  },
 		  {
 			element: '#grid',
+			intro: "<div style='width: 300px;'><b>The grid displays all key indicator values for all countries. Individual values can be viewed by hovering over a grid 'cell'. To display a key indicator on the map, a column must either be <i>selected</i> or <i>hovered over</i>.</b>",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'>1. To <i>select</i> an indicator and display it on the map, click on the indicator column's data values (but not on its heading).<br/>2. To <i>de-select</i> an indicator, click a second time on the indicator column's data values (but again not on its heading).",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 300px;'>3. When no indicator is selected, it is possible to hover over an indicator column (its data values <i>or</i> its heading) to display it on the map.",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 500px;'>4. Click on an indicator's column heading to sort the data from largest to smallest (or most recent to least recent for the date column).",
+			position: 'bottom'
+		  },	
+		  {
+			element: '#grid',
+			intro: "<div style='width: 500px;'>5. To highlight a country in the map, hover over its row's data values (but not country name) in the grid.",
+			position: 'bottom'
+		  }	
+/* 		  {
+			element: '#grid',
 			intro: "<div style='width: 500px;'><b>The grid displays all key indicator values for all countries. Individual values can be viewed by hovering over a grid 'cell'. To display a key indicator on the map, a column must either be <i>selected</i> or <i>hovered over</i>.</b><br>1. To <i>select</i> an indicator and display it on the map, click on the indicator column's data values (but not on its heading).<br>2. To <i>de-select</i> an indicator, click a second time on the indicator column's data values (but again not on its heading).<br>3. When no indicator is selected, it is possible to hover over an indicator column (its data values <i>or</i> its heading) to display it on the map.<br>4. Click on an indicator's column heading to sort the data from largest to smallest (or most recent to least recent for the date column).<br>5. To highlight a country in the map, hover over its row's data values (but not country name) in the grid.",
 			position: 'bottom'
-		  },		  
+		  } */
 		]
 	});
     intro.start();
