@@ -90,6 +90,15 @@ var lg =  {
             }
         }        
 
+		this.onHover = function(val){
+            if(typeof val === 'undefined'){
+                return this._onHover;
+            } else {
+                this._onHover=val;
+                return this;
+            }
+        }   
+		
         this._style = function(feature){
             return {
                 weight: 1,
@@ -101,6 +110,10 @@ var lg =  {
         };
 
         this._onClick = function(feature){
+            return feature;
+        }
+		
+		this._onHover = function(feature){
             return feature;
         }
 
@@ -158,6 +171,10 @@ var lg =  {
 
                 layer.on("click",function(f,l){
                     _parent._onClick(f.target.feature);
+                });
+				
+				layer.on("hover",function(f,l){
+                    _parent._onHover(f.target.feature);
                 });
 
                 function findCurrentData(joinAttr){
