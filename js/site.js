@@ -1,17 +1,10 @@
 /* NEXT CHANGES:
 	- objectify stats generation
 	- changes to tour - subdivide final step into sub-component steps; add in imgs of sub-divs?
-	- table stats for individual countries - make more aesthetic
-	
-	
-Notes for Henk:
-- Provision of connectivity - not for this week? - its the only distribution/connectivity attribute that does not have a supplementary column for this week.
-- I've noted that Bosnia & H are not responding - but we are updating their date to be the most recent. Is this correct?
-- Please note the differences between No data, N/A, and 0 - all N/As are replace with 'No data'.
-	
+	- table stats for individual countries - make more aesthetic?
 */
 
-// Countries in shapefile but  not in spreadsheet: e.g. Georgia, Estonia, Latvia, Moldova, Ukraine, Russia, Slovakia, Kosovo, Turkey
+// Note: Countries in shapefile but  not in spreadsheet: e.g. Georgia, Estonia, Latvia, Moldova, Ukraine, Russia, Slovakia, Kosovo, Turkey
 // Bosnia, Macedonia
  
 function generateDashboard(data,geom){
@@ -103,7 +96,7 @@ function generateDashboard(data,geom){
         .joinAttr('ISO 3 code')
         .hWhiteSpace(10)
         .vWhiteSpace(5)
- 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Active full-time equivalent', 'People in long-term shelter', 'People in short-term shelter', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Hot and cold drinks', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests', 'RFL reunifications', pplReached, updateDates]) 
+ 		.columns(['Total Migrants 2015', resLocs, 'Active volunteers', 'Active staff', 'Active full-time equivalent', 'Bednights in long-term shelter - total', 'Bednights in long-term shelter this week', 'Bednights in short-term shelter - total', 'Bednights in short-term shelter this week', 'Distributions: Relief kits', 'Distributions: Hygiene items', 'Distributions: Food parcels', 'Distributions: Meals', 'Distributions: Water bottles', 'Distributions: Hot and cold drinks', 'Distributions: Blankets and sleeping bags', 'Distributions: Clothing', 'Provision of connectivity', 'Provision of medical care', 'Provision of first aid', 'Provision of psychosocial support', 'RFL requests', 'RFL reunifications', pplReached, updateDates]) 
         .margins({top: 165, right: 62, bottom: 20, left: 290});
 	//lg.colors(['#edf8fb','#b2e2e2','#66c2a4','#2ca25f','#006d2c']);  //blue-green multi-hue
 	lg.colors(['#feebe2','#fbb4b9','#f768a1','#c51b8a','#7a0177']);  //pink-purple multi-hue
