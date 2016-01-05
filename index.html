@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/leaflet.css"/>       
         <link rel="stylesheet" type="text/css" href="js/leaflet-grid-graph.css"/>
+		<link rel="stylesheet" type="text/css" href="css/introjs.css"/>
         <link rel="stylesheet" type="text/css" href="css/site.css"/>
         <script src="js/jquery.js"></script>
         <script src="js/d3.min.js"></script>
@@ -13,6 +14,7 @@
         <script src="js/leaflet.js"></script>
         <script src="js/tile.stamen.js"></script>
         <script src="js/leaflet-grid-graph.js"></script>
+		<script src="js/intro.js"></script> 
         <script src="js/topojson.v1.min.js"></script>  
         <script type="text/javascript">
             var _gaq = _gaq || [];
@@ -29,32 +31,32 @@
 		<div class="container dashboard">
 			<div class="row">
 				<div class="col-md-4 spacer_md">
-						<p class="title">Europe Population Movement</p>
-						<p class="subtitle">Europe Population Movement 2015 - Situation Report</p>
-					</div>
-					<div class="col-md-4 spacer_md">
-						<p>
-						<img src="http://www.ifrc.org/Global/ifrc.org/Logos/IFRC-logo.gif" height="28">
-						<br/>
-						<h5>Produced by SIMS supported by ARC and BRC</h5> <br/>
-						</p>
-					</div>
-					<div class="col-md-4 spacer_md">
-						<p>
-						Source: <a href="https://www.ifrc.org" target="_blank">IFRC</a> and <a href="https://www.ifrc.org/en/who-we-are/directory/contact-information/" target="_blank">Individual National Societies</a><br/>
-						<i>Data updated: 1 December 2015</i><br/>
-						<h5>For feedback email: <a href="mailto:im.migration@ifrc.org?subject=IM_Europe-resources-online-feedback">im.migration@ifrc.org</a></h5>
-						</p>
-					</div>
+					<p class="title">Europe Population Movement</p>
+					<p class="subtitle">Europe Population Movement 2015 - Situation Report</p><br/>
+					<button id="intro" class="btn btn-primary btn-sm">Take a Tour</button><br/>
+				</div>
+				<div class="col-md-4 spacer_md">
+					<p>
+					<img src="http://www.ifrc.org/Global/ifrc.org/Logos/IFRC-logo.gif" height="28">
+					<br/>
+					<h5>Produced by SIMS supported by ARC and BRC</h5> <br/>
+					</p>
+				</div>
+				<div class="col-md-4 spacer_md">
+					<p>
+					Source: <a href="https://www.ifrc.org" target="_blank">IFRC</a> and <a href="https://www.ifrc.org/en/who-we-are/directory/contact-information/" target="_blank">Individual National Societies</a><br/>
+					<i>Data updated: 30 December 2015</i><br/>
+					<h5>For feedback email: <a href="mailto:im.migration@ifrc.org?subject=IM_Europe-resources-online-feedback">im.migration@ifrc.org</a></h5>
+					</p>
+				</div>
 			</div>
 			<div class="row spacer_sm">           
 					<!-- <div id="sticky-anchor"></div>  -->
 				<div class="col-md-8" id="map-container">
-					<p>[Hover over gridded data table below to display country data in map]</p>
-					<div id="map"></div>
+					<div id="map"><p class="loading_msg">Please wait while loading...</p></div>
 				</div>
-				<div class="col-md-4">
-					<h4 id="key_stats_title"><br/>Key Statistics</h4>
+				<div id="key_stats_container" class="col-md-4">
+					<h4 id="key_stats_title" class=>Key Statistics</h4>
 					<div id="key_stats"></div>
 				</div>
 			</div>
